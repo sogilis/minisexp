@@ -28,7 +28,7 @@ public:
     sexpr cadr();
     sexpr cdar();
 
-    llvm::Value *generate(llvm::IRBuilder<> &builder);
+    llvm::Value *generate(llvm::IRBuilder<> &builder, llvm::BasicBlock *entry);
 
     operator minivar_t& ();
 };

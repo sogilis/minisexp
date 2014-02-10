@@ -1,4 +1,4 @@
 (def main
  (fun
   (puts "Hello World")
-  (printfi "n = %d" 3)))
+  (printfi "n = %d" (+ 1 2))))

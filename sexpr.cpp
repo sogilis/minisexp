@@ -70,12 +70,21 @@ sexpr sexpr::cdar()
     return sexpr(miniexp_cdar(expr));
 }
 
-llvm::Value *sexpr::generate(llvm::IRBuilder<> &builder)
+llvm::Value *sexpr::generate(llvm::IRBuilder<> &builder, llvm::BasicBlock *entry)
 {
     if(is_string()) {
         return builder.CreateGlobalStringPtr(to_string());
-    } else {
+    } else if(miniexp_numberp(expr)) {
         return llvm::ConstantInt::get(llvm::Type::getInt32Ty(builder.getContext()), miniexp_to_int(expr));
+    } else if(miniexp_listp(expr)) {
+        std::string fname = car().to_name();
+        if(fname == "+") {
+            return llvm::BinaryOperator::Create(llvm::Instruction::Add, cdr().car().generate(builder, entry), cdr().cdr().car().generate(builder, entry), "", entry);
+        } else {
+            throw std::string("unsupported function " + car().to_string());
+        }
+    } else {
+        throw std::string("unsupported instruction " + to_string());
     }
 }
 

@@ -55,15 +55,13 @@ void fun::generate(llvm::Module *module)
         std::string fname = call.car().to_name();
         if(fname == "puts") {
             std::vector<llvm::Value*> putsFuncArgs(1);
-            putsFuncArgs[0] = call.cdr().car().generate(builder);
+            putsFuncArgs[0] = call.cdr().car().generate(builder, entry);
             llvm::CallInst::Create(putsFunc, llvm::makeArrayRef(putsFuncArgs), "", entry);
         } else if(fname == "printfi") {
             std::vector<llvm::Value*> printfFuncArgs(2);
-            printfFuncArgs[0] = call.cdr().car().generate(builder);
-            printfFuncArgs[1] = call.cdr().cdr().car().generate(builder);
+            printfFuncArgs[0] = call.cdr().car().generate(builder, entry);
+            printfFuncArgs[1] = call.cdr().cdr().car().generate(builder, entry);
             llvm::CallInst::Create(printfFunc, llvm::makeArrayRef(printfFuncArgs), "", entry);
-        } else if(fname == "+") {
-            llvm::BinaryOperator::Create(llvm::Instruction::Add, call.cdr().car().generate(builder), call.cdr().cdr().car().generate(builder), "", entry);
         }
         i = i.cdr();
     }
