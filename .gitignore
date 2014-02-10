@@ -1,0 +1,10 @@
+/CMakeCache.txt
+/CMakeFiles/
+/CMakeLists.txt.user
+/Makefile
+/cmake/
+/cmake_install.cmake
+/minisexp
+*~
+*.bc
+
