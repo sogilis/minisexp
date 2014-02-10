@@ -1,3 +1,4 @@
 (def main
  (fun
-  (puts "toto")))
+  (puts "Hello World")
+  (printfi "n = %d" 3)))

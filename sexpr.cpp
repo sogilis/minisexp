@@ -74,6 +74,8 @@ llvm::Value *sexpr::generate(llvm::IRBuilder<> &builder)
 {
     if(is_string()) {
         return builder.CreateGlobalStringPtr(to_string());
+    } else {
+        return llvm::ConstantInt::get(llvm::Type::getInt32Ty(builder.getContext()), miniexp_to_int(expr));
     }
 }
 

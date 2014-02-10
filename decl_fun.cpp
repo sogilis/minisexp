@@ -39,6 +39,13 @@ void fun::generate(llvm::Module *module)
     llvm::Function *putsFunc =
         llvm::Function::Create(putsFuncType, llvm::Function::ExternalLinkage, "puts", module);
 
+    std::vector<llvm::Type*> printfFuncTypeArgs(1);
+    printfFuncTypeArgs[0] = builder.getInt8PtrTy();
+    llvm::FunctionType *printfFuncType =
+        llvm::FunctionType::get(builder.getVoidTy(), llvm::makeArrayRef(printfFuncTypeArgs), true);
+    llvm::Function *printfFunc =
+        llvm::Function::Create(printfFuncType, llvm::Function::ExternalLinkage, "printf", module);
+
     llvm::BasicBlock *entry = llvm::BasicBlock::Create(module->getContext(), "entry", mainFunc);
     builder.SetInsertPoint(entry);
 
@@ -50,6 +57,13 @@ void fun::generate(llvm::Module *module)
             std::vector<llvm::Value*> putsFuncArgs(1);
             putsFuncArgs[0] = call.cdr().car().generate(builder);
             llvm::CallInst::Create(putsFunc, llvm::makeArrayRef(putsFuncArgs), "", entry);
+        } else if(fname == "printfi") {
+            std::vector<llvm::Value*> printfFuncArgs(2);
+            printfFuncArgs[0] = call.cdr().car().generate(builder);
+            printfFuncArgs[1] = call.cdr().cdr().car().generate(builder);
+            llvm::CallInst::Create(printfFunc, llvm::makeArrayRef(printfFuncArgs), "", entry);
+        } else if(fname == "+") {
+            llvm::BinaryOperator::Create(llvm::Instruction::Add, call.cdr().car().generate(builder), call.cdr().cdr().car().generate(builder), "", entry);
         }
         i = i.cdr();
     }

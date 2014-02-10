@@ -7,4 +7,5 @@
 /minisexp
 *~
 *.bc
-
+*.S
+/test
